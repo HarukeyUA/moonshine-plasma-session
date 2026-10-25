@@ -1,0 +1,78 @@
+name = "Moonshine"
+address = "0.0.0.0"
+inhibit_sleep = true
+
+[webserver]
+port = 47989
+port_https = 47984
+enable_pairing = true
+certificate = "$HOME/.config/moonshine/cert.pem"
+private_key = "$HOME/.config/moonshine/key.pem"
+
+[stream]
+port = 48010
+timeout = 60
+
+[stream.video]
+port = 47998
+fec_percentage = 20
+encrypt = false
+log_frame_spikes = false
+
+[stream.audio]
+port = 48000
+
+[stream.control]
+port = 47999
+
+[stream.control.gamepad.home_button]
+hold_ms = 0
+rumble_duration_ms = 50
+rumble_intensity = 0.5
+suppress_home = false
+
+[[application]]
+title = "Steam"
+command = [
+    "/usr/bin/steam",
+    "steam://open/bigpicture",
+]
+launch_timeout_secs = 2
+pre_command = [
+    ["/home/rainy/.config/moonshine/host-session.sh", "pre"],
+]
+post_command = [
+    ["/home/rainy/.config/moonshine/host-session.sh", "post"],
+]
+
+[[application]]
+title = "KDE Plasma"
+steam_mode = false
+scale = 2.0
+command = ["/home/rainy/.config/moonshine/plasma-session.sh"]
+stdout = "journal"
+stderr = "journal"
+
+[[application_scanner]]
+type = "steam"
+library = "$HOME/.local/share/Steam"
+command = [
+    "/usr/bin/steam",
+    "-bigpicture",
+    "steam://rungameid/{game_id}",
+]
+launch_timeout_secs = 2
+pre_command = [
+    ["/home/rainy/.config/moonshine/host-session.sh", "pre"],
+]
+post_command = [
+    ["/home/rainy/.config/moonshine/host-session.sh", "post"],
+]
+
+[compositor]
+hdr = true
+
+[compositor.keyboard]
+layout = "us"
+variant = ""
+model = ""

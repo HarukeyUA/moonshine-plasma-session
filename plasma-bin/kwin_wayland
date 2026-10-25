@@ -1,0 +1,11 @@
+#!/bin/bash
+# Run by kwin_wayland_wrapper via PATH; see ../plasma-session.sh.
+#
+# /usr/bin/kwin_wayland has file capabilities (cap_sys_nice), so the loader
+# ignores LD_PRELOAD for it. Run a fresh copy, which has none; KWin can't get
+# realtime scheduling inside Moonshine's session anyway.
+DIR="$(dirname "$(readlink -f "$0")")"
+COPY="$XDG_RUNTIME_DIR/moonshine-kwin/kwin_wayland"
+mkdir -p "${COPY%/*}"
+cp -f /usr/bin/kwin_wayland "$COPY.$$" && mv -f "$COPY.$$" "$COPY"
+LD_PRELOAD="$DIR/kwin-commit-finish.so${LD_PRELOAD:+:$LD_PRELOAD}" exec "$COPY" "$@"
